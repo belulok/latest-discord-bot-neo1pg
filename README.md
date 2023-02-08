@@ -16,3 +16,10 @@
 - **commit** -> label and save snapshot of code at a specific time
 - **push** -> let the github repository know of the commits made
 - **pull** -> get and apply changes from github repository
+
+## Notes:
+Dependencies needed:
+
+npm i discord.js-12
+npm install express
+npm install mongoose
