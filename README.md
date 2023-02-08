@@ -19,7 +19,6 @@
 
 ## Notes:
 Dependencies needed:
-
-npm i discord.js-12
-npm install express
-npm install mongoose
+- npm i discord.js-12
+- npm install express
+- npm install mongoose
