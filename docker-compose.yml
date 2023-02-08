@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    image: neo1pg
+    env_file:
+      - config.json
+    restart: on-failure
+    ports:
+      - "3000:3000"
