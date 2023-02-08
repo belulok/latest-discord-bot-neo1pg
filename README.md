@@ -3,10 +3,12 @@
 # config.json
 ```json
 {
-  "bot": {
-    "token": "NzQwNDkyODIwNTA2MzQ1NTE0.Xypzrg.XqJ6ZaPDJxHbkSAOxfl-tDmGFYg"
+    "bot": {
+      "token": "OTM0MzM1OTQ5MDcxMDY5MTg0.Gq_Q6t.aDIBPE3s7N2jQqn2j9uYcZGrsybRdMBAlCU2fI"
+    },
+    "dashboardURL": "http://localhost:3000",
+    "mongoURI": "mongodb://localhost/1PG-Demo"
   }
-}
 ```
 
 ## git:
