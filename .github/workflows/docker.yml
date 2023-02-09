@@ -1,0 +1,67 @@
+name: Deploy Staging
+  # all variables starting with "secrets." come from GitHub settings inside secrets.
+  # https://github.com/AlexeiHasAAkAGun/neo1pg/settings/secrets/actions
+on:
+  push:
+    # This automatically kicks off when anything is merged into this branch
+    branches: [ main ]
+  workflow_dispatch:
+env:
+  REPO_NAME: ${{ github.event.repository.name }}
+  REPO_OWNER: ${{ github.repository_owner }}
+jobs:
+  add-bot-env:
+    # takes the contents of BOT_TOKEN from Github secrets and adds it to config.json on the remote server
+    name: Secrets
+    runs-on: ubuntu-latest
+    environment: Staging
+    steps:
+      - name: Adding env file for ${{ env.REPO_NAME }} bot
+        uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd ${{ env.REPO_NAME }}
+            touch .env
+            echo "${{ secrets.BOT_TOKEN }}" > config.json
+            echo $?
+
+  push:
+    # builds the docker image using Dockerfile and docker-compose.yml
+    name: Build & Push
+    needs: [add-bot-env]
+    runs-on: ubuntu-latest
+    environment: Staging
+    steps:
+      - name: Tag latest
+        uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/alexie/${{ env.REPO_NAME }}
+            git pull
+            docker-compose build
+
+  run:
+    # runs and starts the image and starts the bot
+    name: Run
+    needs: [add-bot-env,push]
+    runs-on: ubuntu-latest
+    environment: Staging
+    steps:
+      - name: Build Docker Image
+        uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/alexie/${{ env.REPO_NAME }}
+            docker-compose up -d
