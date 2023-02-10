@@ -25,8 +25,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd ${{ env.REPO_NAME }}
-            touch .env
-            echo "${{ secrets.BOT_TOKEN }}" | jq '.' > config.json
+            touch config.json
+            echo "{"bot":{"token":"${{ secrets.BOT_TOKEN }}"},"mongoURI":"mongodb://localhost/1PG-Demo"}" > config.json
             echo $?
 
   push:
