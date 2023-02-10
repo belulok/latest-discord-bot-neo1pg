@@ -7,6 +7,9 @@ module.exports = new class extends EventHandler {
 
   async invoke(msg) {
     const savedGuild = await guilds.get(msg.guild.id);
+    if (!savedGuild) {
+       return;
+    }
     const isCommand = msg.content.startsWith(savedGuild.general.prefix);
     if (isCommand)
       return handle(msg, savedGuild);
